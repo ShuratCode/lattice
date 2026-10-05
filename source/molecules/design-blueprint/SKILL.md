@@ -38,7 +38,7 @@ Read and apply in order before Step 1:
    - Local path, unreadable → STOP: "Requirement doc not found at `[path]`. Verify before continuing."
    - Local path, readable → read it and extract `## Technical Constraints`. Treat as non-negotiable — same authority as architecture rules. Surface to the user before the first level is presented.
    - External reference (URL, ticket ID, or other non-local-path identifier) → resolve via a connected MCP tool if one can. If none is connected or the fetch returns nothing, ask the user to paste the current constraints — expected, not an error.
-   - Either path resolved to full spec content → note whether `## Scope` is filled in and `## Scenarios` holds at least one `### Scenario` — Step 2's spec rule uses them. Pasted constraints alone do not qualify.
+   - Either path resolved to the spec itself (not pasted constraints only) → Step 2's spec rule applies.
    - Conflict during design → surface via `framework:collaborative-judgment`. The user decides; record the change back in the requirement doc's `## Technical Constraints` if local, or in the Decisions Log if external — this molecule never writes to an external system.
 
 5. **Write the back-link**: if `requirement_doc` resolved to a readable local file at `.lattice/requirements/features/{feature-name}.md`, add to its `## Links` section: `- Design: [{feature-name}.md](../../context/{feature-name}.md)`. One discrete file edit; skip if the link is already present.
@@ -47,12 +47,10 @@ Read and apply in order before Step 1:
 
 Run design-first's Entry Assessment first: state the proposed entry level from its Complexity Calibration table and wait for confirmation. Record the confirmed entry level as the first Decisions Log entry: `[Entry] Start at Level N (name) — rationale.` If key use cases or success criteria are unclear, surface them via `framework:collaborative-judgment` before producing the first level output.
 
-**Spec rule (Level 1 already agreed)**: when the context doc has no `## Design: Level` section yet, `requirement_doc` resolved, its `## Scope` is filled in, and `## Scenarios` holds at least one `### Scenario`, the spec is the agreed Level 1 — requirement-forge already settled the user-facing outcomes with the user. **STOP: do not re-walk Level 1.**
-- Propose entry at Level 2 or the calibrated level, whichever is later. Say it in the Entry Assessment: "Level 1 is the spec's Scope and [N] scenarios, taken as agreed."
-- The entry confirmation is Level 1's gate. Ask: "Do the spec's scenarios still cover what this design must deliver?" **STOP — do NOT advance to Level 2 until the user explicitly confirms.**
-- The user says the scenarios do not cover it → enter at Level 1 and log the gap in the Decisions Log for Step 3's drift check.
-- On confirmation, persist `## Design: Level 1 -- Capabilities` as one line: `Taken from [{spec-file}](../requirements/features/{spec-file}) — Scope and Scenarios. Not re-walked.` — the link is relative to the context doc; an external spec gets its reference instead. Do not copy the scenarios.
-- Enter at Level 1 only when the user asks, or the spec leaves scope open (a scope question in `## Open Questions`, or the design must merge the scope of several specs).
+**Spec as Level 1**: when the context doc has no `## Design: Level` section yet and `requirement_doc` resolved to the spec itself, the spec is Level 1. Do not re-validate it — spec quality belongs to requirement-forge.
+- Propose entry at Level 2 or the calibrated level, whichever is later, and offer: "Level 1 comes from the linked spec. Starting at Level [N]. Want a capabilities walk-through first?" **STOP — do NOT advance until the user answers.**
+- User wants the walk-through → enter at Level 1, using the spec as input.
+- Otherwise, save `## Design: Level 1 -- Capabilities` as one line: `Taken from [{spec-file}](../requirements/features/{spec-file}). Not re-walked.` — the link is relative to the context doc; an external spec gets its reference instead. Do not copy the spec.
 
 Drive the levels sequentially from the confirmed entry level through Level 4 via `framework:design-first`. Complexity Calibration sets how deep each level goes; it never removes a gate or skips persistence.
 
